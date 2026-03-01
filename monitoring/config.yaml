@@ -1,0 +1,90 @@
+# Post-Market Monitoring Configuration
+# Acme AI Hiring Tool v2.1
+# EU AI Act Article 72 - Post-market surveillance
+
+monitoring:
+  enabled: true
+  environment: production
+
+# Data drift detection
+drift:
+  schedule: weekly  # Run every Monday at 02:00 UTC
+  metrics:
+    - name: population_stability_index
+      target: score_distribution
+      warning_threshold: 0.1
+      critical_threshold: 0.2
+    - name: kolmogorov_smirnov
+      target: score_distribution
+      alpha: 0.05
+    - name: feature_drift
+      target: input_features
+      method: psi
+      warning_threshold: 0.15
+
+# Model performance monitoring
+performance:
+  schedule: monthly
+  metrics:
+    - name: auc_roc
+      minimum_threshold: 0.80
+      target: 0.87
+    - name: precision_at_80
+      minimum_threshold: 0.75
+    - name: recall_at_80
+      minimum_threshold: 0.70
+    - name: f1_score
+      minimum_threshold: 0.72
+
+# Fairness monitoring
+fairness:
+  schedule: quarterly
+  metrics:
+    - name: demographic_parity
+      groups: [gender, age_group]
+      threshold: 0.80  # 4/5ths rule
+    - name: equal_opportunity
+      groups: [gender, age_group]
+      max_tpr_gap: 0.10
+    - name: equalized_odds
+      groups: [gender, age_group]
+      max_fpr_gap: 0.10
+    - name: calibration
+      groups: [gender, age_group]
+      max_gap: 0.05
+
+# Alerting
+alerts:
+  channels:
+    - type: email
+      recipients:
+        - ai-governance@acmecorp.example.com
+        - ml-team@acmecorp.example.com
+    - type: slack
+      channel: "#ai-monitoring"
+  severity_routing:
+    critical:
+      - email
+      - slack
+    warning:
+      - slack
+
+# Retraining triggers
+retraining:
+  schedule: semi-annual  # Every 6 months
+  auto_trigger_conditions:
+    - metric: auc_roc
+      condition: below
+      value: 0.82
+    - metric: psi
+      condition: above
+      value: 0.2
+  training_data_window: 24  # months
+
+# Audit logging
+logging:
+  prediction_logging: true
+  override_logging: true
+  access_logging: true
+  retention_days: 1825  # 5 years
+  format: structured_json
