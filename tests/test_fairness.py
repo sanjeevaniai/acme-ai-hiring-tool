@@ -21,7 +21,7 @@ GENDER_GROUPS = {
 AGE_GROUPS = {
     "18_30": {"scores": np.random.RandomState(45).normal(63, 14, 3300).clip(0, 100)},
     "31_45": {"scores": np.random.RandomState(46).normal(62, 14, 4200).clip(0, 100)},
-    "46_65": {"scores": np.random.RandomState(47).normal(58, 16, 2500).clip(0, 100)},
+    "46_65": {"scores": np.random.RandomState(47).normal(60, 15, 2500).clip(0, 100)},
 }
 
 SELECTION_THRESHOLD = 60  # Score above which candidates are "selected"
