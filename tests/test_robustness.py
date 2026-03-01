@@ -6,11 +6,17 @@ and adversarial-like inputs. Ensures the system degrades
 gracefully and flags anomalous inputs.
 """
 
+import sys
+from pathlib import Path
+
 import numpy as np
+import pandas as pd
 import pytest
 
+# Allow imports from project root
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
 from src.model import validate_input, MIN_RESUME_LENGTH, MAX_RESUME_LENGTH
-import pandas as pd
 
 
 class TestInputValidation:
